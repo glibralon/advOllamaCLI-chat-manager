@@ -61,12 +61,12 @@ The app looks for a `config.json` file to set default behaviors. You can modify 
     "CHATS_DIRECTORY": "chats",          // Folder where history is saved
     "OLLAMA_HOST": "http://localhost:11434" // URL of the Ollama server
 }
-```json
+```
 
 **### How to use**
 **Main Menu**
 When you launch the app, you will see options to:
-**Start a New Chat: **Create a new session (you will be asked for a Topic name).
+**Start a New Chat:** Create a new session (you will be asked for a Topic name).
 **Load Existing Chat:** Choose from a list of previous conversations.
 **Delete Session: **Permanently remove old history files.
 **Search Sessions: **Find specific text across all your saved chats.
