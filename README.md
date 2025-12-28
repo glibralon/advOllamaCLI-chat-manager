@@ -61,6 +61,7 @@ The app looks for a `config.json` file to set default behaviors. You can modify 
     "CHATS_DIRECTORY": "chats",          // Folder where history is saved
     "OLLAMA_HOST": "http://localhost:11434" // URL of the Ollama server
 }
+```json
 
 **### How to use**
 **Main Menu**
