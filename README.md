@@ -63,34 +63,34 @@ The app looks for a `config.json` file to set default behaviors. You can modify 
 }
 ```
 
-**### How to use**
-**Main Menu**
-When you launch the app, you will see options to:
-**Start a New Chat:** Create a new session (you will be asked for a Topic name).
-**Load Existing Chat:** Choose from a list of previous conversations.
-**Delete Session: **Permanently remove old history files.
-**Search Sessions: **Find specific text across all your saved chats.
-**Manage Models:** List, delete, or pull (install) new Ollama models.
-
-**In-Chat Commands**
-While chatting, you can use these special commands:
-EOF,Type EOF on a new line and press Enter to send a multi-line message (great for pasting code).
-"/ingest ""file.pdf""","Reads a file and adds it to the context. Supports PDF, DOCX, Excel, Code, etc."
-"/export --save ""file.docx""",Saves the next AI response to a file.
-"/export --save ""file.md"" --all",Saves the entire chat history to a file.
-/model [name],"Switches the active model immediately (e.g., /model mistral)."
-/topic [name],Renames the current session topic (and the save file).
-/sys_prompt [text],Changes the System Prompt (personality) for the current session.
-/context [number],"Changes the memory window size (e.g., /context 20)."
-/summarize_context,Forces a manual summary of the conversation history.
-/bye,Exits the session and saves your history.
-
-**Command Line Arguments**
-You can also run the script with arguments to skip the menu:
-**--ingest "file.txt":** Start a new chat immediately with this file ingested.
-**--ollama-host "url":** Connect to a remote Ollama server (e.g., http://192.168.1.50:11434).
-
-**⚠️ Troubleshooting**
-**PDF Export Issues:** If PDF export fails or looks standard, ensure DejaVuSans.ttf and DejaVuSans-Bold.ttf are present in the application folder.
-**"Ollama not found":** Ensure the Ollama application is running.
-**Excel Import: **Requires openpyxl (installed automatically by the setup script).
+**### How to use**  
+**Main Menu**  
+When you launch the app, you will see options to:  
+**Start a New Chat:** Create a new session (you will be asked for a Topic name).  
+**Load Existing Chat:** Choose from a list of previous conversations.  
+**Delete Session:** Permanently remove old history files.  
+**Search Sessions:** Find specific text across all your saved chats.  
+**Manage Models:** List, delete, or pull (install) new Ollama models.  
+  
+**In-Chat Commands**  
+While chatting, you can use these special commands:  
+EOF,Type EOF on a new line and press Enter to send a multi-line message (great for pasting code).  
+"/ingest ""file.pdf""","Reads a file and adds it to the context. Supports PDF, DOCX, Excel, Code, etc."  
+"/export --save ""file.docx""",Saves the next AI response to a file.  
+"/export --save ""file.md"" --all",Saves the entire chat history to a file.  
+/model [name],"Switches the active model immediately (e.g., /model mistral)."  
+/topic [name],Renames the current session topic (and the save file).  
+/sys_prompt [text],Changes the System Prompt (personality) for the current session.  
+/context [number],"Changes the memory window size (e.g., /context 20)."  
+/summarize_context,Forces a manual summary of the conversation history.  
+/bye,Exits the session and saves your history.  
+  
+**Command Line Arguments**  
+You can also run the script with arguments to skip the menu:  
+**--ingest "file.txt":** Start a new chat immediately with this file ingested.  
+**--ollama-host "url":** Connect to a remote Ollama server (e.g., http://192.168.1.50:11434).  
+  
+**⚠️ Troubleshooting**  
+**PDF Export Issues:** If PDF export fails or looks standard, ensure DejaVuSans.ttf and DejaVuSans-Bold.ttf are present in the application folder.  
+**"Ollama not found":** Ensure the Ollama application is running.  
+**Excel Import:** Requires openpyxl (installed automatically by the setup script).
