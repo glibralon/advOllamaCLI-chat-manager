@@ -75,9 +75,9 @@ When you launch the app, you will see options to:
 **In-Chat Commands**  
 While chatting, you can use these special commands:  
 **EOF** - Type EOF on a new line and press Enter to send a multi-line message (great for pasting code).  
-**"/ingest ""file.pdf"""** - Reads a file and adds it to the context. Supports PDF, DOCX, Excel, Code, etc.  
-**"/export --save ""file.docx"""** - Saves the next AI response to a file.  
-**"/export --save ""file.md"" --all"** - Saves the entire chat history to a file.  
+**/ingest "file.pdf"** - Reads a file and adds it to the context. Supports PDF, DOCX, Excel, Code, etc.  
+**/export --save "file.docx"** - Saves the next AI response to a file.  
+**/export --save "file.md" --all** - Saves the entire chat history to a file.  
 **/model [name]** - Switches the active model immediately (e.g., /model mistral).  
 **/topic [name]** - Renames the current session topic (and the save file).  
 **/sys_prompt [text]** - Changes the System Prompt (personality) for the current session.  
