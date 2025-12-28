@@ -1,0 +1,9 @@
+ollama
+tiktoken
+pandas
+fpdf
+halo
+python-docx
+PyPDF2
+openpyxl
+tabulate
