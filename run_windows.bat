@@ -1,63 +1,76 @@
 @echo off
-title Ollama Chat Manager
+title Ollama Chat Manager (Debug Mode)
 echo ========================================================
-echo Initializing Environment...
+echo Starting System Diagnostics...
 echo ========================================================
 
-:: 1. Check/Install Python & Ollama
-python --version >nul 2>&1 || (
-    echo [INFO] Installing Python...
+:: 1. Check/Install Python
+python --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [DEBUG] Python missing. Installing...
     winget install -e --id Python.Python.3.11 --silent --accept-package-agreements --accept-source-agreements
+    for /f "tokens=* usebackq" %%p in (`powershell -Command "& {[System.Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [System.Environment]::GetEnvironmentVariable('Path','User')}"`) do (set "PATH=%%p")
 )
-ollama --version >nul 2>&1 || (
-    echo [INFO] Installing Ollama...
+
+:: 2. Check/Install Ollama
+ollama --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [DEBUG] Ollama missing. Installing...
     winget install -e --id Ollama.Ollama --silent --accept-package-agreements --accept-source-agreements
+    timeout /t 5 >nul
+    taskkill /f /im "Ollama.exe" >nul 2>&1
+    for /f "tokens=* usebackq" %%p in (`powershell -Command "& {[System.Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [System.Environment]::GetEnvironmentVariable('Path','User')}"`) do (set "PATH=%%p")
 )
 
-:: Refresh Path (so we can use 'python' and 'ollama' immediately)
-for /f "tokens=* usebackq" %%p in (`powershell -Command "& {[System.Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [System.Environment]::GetEnvironmentVariable('Path','User')}"`) do (set "PATH=%%p")
-
-:: 2. ENSURE OLLAMA SERVER IS RUNNING [Fixes "Missing Models" in App]
-echo [INFO] Starting Ollama Background Server...
+:: 3. Force Start Ollama Server (Important for listing models)
+echo [DEBUG] Checking Ollama Server...
 tasklist /fi "imagename eq ollama.exe" | findstr /i "ollama.exe" >nul
 if %errorlevel% neq 0 (
     start /B ollama serve >nul 2>&1
 )
 
-:: Wait for server to respond before continuing
-:wait_ollama
+:: Wait for server to be responsive
+:wait_server
 curl -s http://localhost:11434 >nul
 if %errorlevel% neq 0 (
-    timeout /t 1 >nul
-    goto wait_ollama
+    echo [DEBUG] Waiting for Ollama API...
+    timeout /t 2 >nul
+    goto wait_server
 )
 
-:: 3. VIRTUAL ENVIRONMENT & PACKAGES [Fixes "Module Not Found" errors]
+:: 4. Virtual Environment & Dependencies
 if not exist "venv" (
-    echo [INFO] Creating virtual environment...
-    python -m venv venv
+    echo [DEBUG] Creating VENV...
+    python -m venv venv || (echo [ERROR] VENV creation failed! && pause && exit)
 )
 
-echo [INFO] Activating environment and checking libraries...
 call venv\Scripts\activate
-:: Ensure tiktoken and other needs are there
-pip install tiktoken ollama --upgrade --quiet
-if exist "requirements.txt" pip install -r requirements.txt --upgrade --quiet
+echo [DEBUG] Installing requirements...
+:: Force tiktoken install here since it was missing before
+pip install tiktoken --quiet
+if exist "requirements.txt" (
+    pip install -r requirements.txt --upgrade --quiet || (echo [ERROR] Pip install failed! && pause && exit)
+)
 
-:: 4. ENSURE MODEL IS DOWNLOADED
-echo [INFO] Verifying model 'neural-chat:7b'...
+:: 5. Model Pull (This is where scripts often "hang")
+echo [DEBUG] Checking Model...
 ollama list | findstr "neural-chat:7b" >nul
 if %errorlevel% neq 0 (
-    echo [INFO] Downloading model (this may take a few minutes)...
-    ollama pull neural-chat:7b
+    echo [DEBUG] Pulling model (Please wait, this looks like it's doing nothing but it is)...
+    ollama pull neural-chat:7b || (echo [ERROR] Model pull failed! && pause && exit)
 )
 
-:: 5. LAUNCH APP
+:: 6. Launching App
 echo ========================================================
-echo [SUCCESS] Launching Chat App...
+echo [DEBUG] Reached the end! Launching chat_app.py...
 echo ========================================================
-:: We are already inside the 'venv' here, so python will find your packages
-python chat_app.py
+if exist "chat_app.py" (
+    python chat_app.py
+) else (
+    echo [ERROR] chat_app.py NOT FOUND in this folder!
+    dir /b
+)
 
 :: Keep window open if app crashes
 pause
+
