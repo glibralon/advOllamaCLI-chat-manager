@@ -1,6 +1,6 @@
 # Ollama Chat Manager & Session Tool (AdvOllamaCLI)
 
-A robust, command-line interface (CLI) for interacting with local Ollama AI models. This tool goes beyond basic chat by offering persistent session management, file ingestion (Context RAG), professional export options, and detailed performance metrics.
+A robust, command-line interface (CLI) for interacting with local Ollama AI models. This tool goes beyond basic chat by offering persistent session management, file ingestion (Context RAG), professional export options, and detailed performance metrics. This was a weekend project and support, or updates, won't be provided.
 
 ## Key Features
 
