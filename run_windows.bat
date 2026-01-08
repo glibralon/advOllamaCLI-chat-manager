@@ -6,8 +6,17 @@ echo Initializing Environment...
 echo ========================================================
 
 :: 1. Check Python & Ollama
-python --version >nul 2>&1 || (echo [ERROR] Install Python! && pause && exit)
-ollama --version >nul 2>&1 || (echo [ERROR] Install Ollama! && pause && exit)
+python --version >nul 2>&1 || (
+    echo [INFO] Installing Python...
+    winget install -e --id Python.Python.3.11 --silent --accept-package-agreements --accept-source-agreements
+)
+ollama --version >nul 2>&1 || (
+    echo [INFO] Installing Ollama...
+    winget install -e --id Ollama.Ollama --silent --accept-package-agreements --accept-source-agreements
+)
+
+:: Refresh Path so new installs are recognized
+for /f "tokens=* usebackq" %%p in (`powershell -Command "& {[System.Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [System.Environment]::GetEnvironmentVariable('Path','User')}"`) do (set "PATH=%%p")
 
 :: 2. START THE OLLAMA SERVER (The Engine)
 echo [INFO] Ensuring Ollama Server is running...
@@ -57,3 +66,4 @@ python chat_app.py
 
 :: Keep window open if app crashes
 pause
+
