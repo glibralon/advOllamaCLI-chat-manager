@@ -19,7 +19,7 @@ A robust, command-line interface (CLI) for interacting with local Ollama AI mode
 * **Model Management:**
     * Switch models mid-chat, list available local models, and pull new models directly from the menu.
 
-## Prerequisites
+## Prerequisites (skip it if installing on Windows)
 
 1.  **Python (3.10+):** [Download Here](https://www.python.org/downloads/)
 2.  **Ollama:** The engine required to run the AI models. [Download Here](https://ollama.com/)
