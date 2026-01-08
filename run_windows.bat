@@ -1,63 +1,59 @@
 @echo off
 setlocal enabledelayedexpansion
-title Ollama Chat Manager
+title Ollama Chat Manager - Final Fix
 echo ========================================================
 echo Initializing Environment...
 echo ========================================================
 
-:: 1. Check/Install Python & Ollama
-python --version >nul 2>&1 || (
-    echo [INFO] Installing Python...
-    winget install -e --id Python.Python.3.11 --silent --accept-package-agreements --accept-source-agreements
-)
-ollama --version >nul 2>&1 || (
-    echo [INFO] Installing Ollama...
-    winget install -e --id Ollama.Ollama --silent --accept-package-agreements --accept-source-agreements
-)
+:: 1. Check Python & Ollama
+python --version >nul 2>&1 || (echo [ERROR] Install Python! && pause && exit)
+ollama --version >nul 2>&1 || (echo [ERROR] Install Ollama! && pause && exit)
 
-:: Refresh Path so new installs are recognized
-for /f "tokens=* usebackq" %%p in (`powershell -Command "& {[System.Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [System.Environment]::GetEnvironmentVariable('Path','User')}"`) do (set "PATH=%%p")
-
-:: 2. START & VERIFY OLLAMA SERVER [Fixes the crash]
+:: 2. START THE OLLAMA SERVER (The Engine)
 echo [INFO] Ensuring Ollama Server is running...
 tasklist /fi "imagename eq ollama.exe" | findstr /i "ollama.exe" >nul
 if !errorlevel! neq 0 (
-    echo [INFO] Starting background engine...
+    echo [INFO] Starting background server...
     start /B ollama serve >nul 2>&1
 )
 
-:: Wait for the API to respond before trying to list models
+:: 3. WAIT FOR SERVER TO RESPOND
+echo [INFO] Waiting for server to wake up...
 :wait_server
 curl -s http://localhost:11434 >nul
 if !errorlevel! neq 0 (
-    echo [INFO] Waiting for engine to wake up...
     timeout /t 2 >nul
     goto wait_server
 )
+echo [SUCCESS] Server is responding.
 
-:: 3. Setup Virtual Env & Dependencies
+:: 4. THE MODEL PULL
+echo [INFO] Checking for model: neural-chat:7b...
+ollama list > models_check.tmp 2>&1
+findstr "neural-chat:7b" models_check.tmp >nul
+if !errorlevel! neq 0 (
+    echo [WARNING] Model NOT found. Starting download (4GB)...
+    echo This will take time. DO NOT CLOSE THIS WINDOW.
+    ollama pull neural-chat:7b
+) else (
+    echo [SUCCESS] Model found on system.
+)
+del models_check.tmp
+
+:: 5. SHOW MODELS
+echo.
+echo Your current Ollama models:
+ollama list
+echo.
+
+:: 6. Setup VENV and Launch
 if not exist "venv" (python -m venv venv)
 call venv\Scripts\activate
-echo [INFO] Syncing libraries (tiktoken, etc)...
 pip install tiktoken ollama --upgrade --quiet
 if exist "requirements.txt" pip install -r requirements.txt --upgrade --quiet
 
-:: 4. SAFE MODEL CHECK
-echo [INFO] Checking for model: neural-chat:7b...
-ollama list > models.tmp 2>&1
-findstr "neural-chat:7b" models.tmp >nul
-if !errorlevel! neq 0 (
-    echo [INFO] Model not found. Pulling 'neural-chat:7b'...
-    ollama pull neural-chat:7b
-)
-del models.tmp
-
-:: 5. Launch App
-echo [SUCCESS] Launching Chat App...
+echo [INFO] Launching chat_app.py...
 python chat_app.py
 
 :: Keep window open if app crashes
 pause
-
-
-
