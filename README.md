@@ -63,7 +63,7 @@ The app looks for a `config.json` file to set default behaviors. You can modify 
 }
 ```
 
-**### How to use**  
+## How to Use
 **Main Menu**  
 When you launch the app, you will see options to:  
 **Start a New Chat:** Create a new session (you will be asked for a Topic name).  
