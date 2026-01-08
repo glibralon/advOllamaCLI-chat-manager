@@ -30,7 +30,7 @@ A robust, command-line interface (CLI) for interacting with local Ollama AI mode
 ### Option A: The Easy Way (Windows)
 1.  **Download:** Click the green **Code** button > **Download ZIP** and extract it.
 2.  **Run:** Double-click the **`run_windows.bat`** file.
-    * *First Run:* This script will automatically create a virtual environment, install all dependencies, and pull the default model (`llama3`). This may take 5-10 minutes. Subsequent runs will be instant.
+    * *First Run:* This script will automatically create a virtual environment, install all dependencies, and pull the default model (`neural-chat`). This may take 5-10 minutes if Python and Ollama don't need to be installed. Subsequent runs will be instant. Akways double-click the **`run_windows.bat`** file to execute the app.
 
 ### Option B: Mac / Linux
 1.  Open Terminal in the downloaded folder.
